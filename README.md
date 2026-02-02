@@ -2,6 +2,7 @@
 
 ## Team - Data Analytics G2
 
+<<<<<<< HEAD
 ---
 
 ## Project 1 (Month 1 Jan 2026): 
@@ -12,10 +13,17 @@ Building a Customer Intelligence Pipeline
 ## PROJECT OBJECTIVE
 Built a fully automated, production-grade customer intelligence pipeline using SQL, Python, and Power BI, implementing RFM segmentation, cohort retention analysis, and market basket modeling to proactively identify churn risk customers and high-value whales
 
+=======
+## Project 1 (Month 1 Jan 2026): Building a Customer Intelligence Pipeline
+
+PROJECT OBJECTIVE
+Built a fully automated, production-grade customer intelligence pipeline using SQL, Python, and Power BI, implementing RFM segmentation, cohort retention analysis, and market basket modeling to proactively identify churn risk customers and high-value whales.
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 ---
 
 ## Flow (end-to-end):
 
+<<<<<<< HEAD
 Raw Kaggle CSV <br>
    ↓  <br>
 Data Cleaning & Modeling (Python)  <br>
@@ -29,6 +37,21 @@ Advanced Analytics (Python: RFM, Cohorts, Market Basket)  <br>
 Power BI Dashboards (with RLS)  <br>
    ↓  <br>
 Automation & Executive Output  <br>
+=======
+Raw Kaggle CSV
+   ↓
+Data Cleaning & Modeling (Python)
+   ↓
+Star Schema in SQL (Fact + Dimensions)
+   ↓
+Single Customer View (SQL View)
+   ↓
+Advanced Analytics (Python: RFM, Cohorts, Market Basket)
+   ↓
+Power BI Dashboards (with RLS)
+   ↓
+Automation & Executive Output
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 
 ---
 
@@ -70,7 +93,10 @@ Dim_Product —— Fact_Sales —— Dim_Date
                      |
                 Dim_Country
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 📦 Fact Table: fact_sales
 | Column       |
 | ------------ |
@@ -109,8 +135,11 @@ Marketing, churn models, Power BI — everything consumes this
 ⏱️ Find and Display the RFM in a SQL View
 ⏱️ Performance Check - 🎯 Target: < 2 seconds
 
+<<<<<<< HEAD
 ---
 
+=======
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 # ✅ Week 1 Deliverables
 ✔ Clean dataset
 ✔ Star schema
@@ -118,8 +147,11 @@ Marketing, churn models, Power BI — everything consumes this
 ✔ Single Customer View
 ✔ SQL optimized
 
+<<<<<<< HEAD
 ---
 
+=======
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 # WEEK 2 — Analytical Core (Python Intelligence)
 
 ## 1️⃣ RFM Calculation
@@ -137,7 +169,11 @@ Marketing, churn models, Power BI — everything consumes this
 
 ## 4️⃣ Market Basket Analysis (Apriori)
 
+<<<<<<< HEAD
 ## ✅ Week 2 Deliverables
+=======
+# ✅ Week 2 Deliverables
+>>>>>>> 4ab53ba73f1053d7a66efc8f7b5046280a6ccfa6
 ✔ RFM engine
 ✔ Segments validated
 ✔ Market basket rules
