@@ -48,30 +48,64 @@ Automation & Executive Output  <br>
 🎯 Goal
 Convert raw transactional logs into a clean, trusted, analytics-ready data with an optimized star schema and create a Single Customer View that downstream analytics can trust and query in < 2 seconds.
 
+---
+
 ## 1️⃣ Understand the Raw Data 
-# Key issues we must handle:
+
+## Key issues we must handle:
 ❌ Negative Quantity → returns
 ❌ Negative Price → data errors
-❌ Missing Customer ID
+❌ Missing Customer ID i.e found "2,43,007"
 ❌ InvoiceDate as string
 ❌ Duplicate invoices
 
 ## 2️⃣ Data Cleaning (Python – pandas)
-Remove rows without Customer ID (cannot do RFM)
-Separate sales vs returns
-Create Revenue
-Convert dates
+- **Handle Missing Customer IDs**
+   Removed rows without Customer ID (cannot do RFM) and also Converted float → int for speed
 
-## 3️⃣ Star Schema Design
+- **Handle Returns & Invalid Data**
+   Filtering out returns & corrupt rows for small table and faster aggregations
 
-                Dim_Customer
+- **Create Revenue**
+   Creating derived metric i.e Monetary (M in RFM), leads to faster SQL queries
+
+- **Convert dates**
+  Converts string → datetime for Recency calculation, Time-based indexing, Partitioning, otherwise SQL queries become slow and RFM Recency becomes impossible
+
+---
+
+## 3️⃣ Load Data into SQL (ETL → L)
+
+# 🔧 Tools
+- SQL 
+- SQLAlchemy
+
+
+# 🔌Python → SQL Connection
+SQLAlchemy Creates DB connection and handles Transactions, Data typing, Bulk inserts faster than row-by-row inserts
+
+**Points to Note:**
+   - Even though SSMS works, Python does NOT automatically inherit SSMS drivers. Hence import pyodbc and call **pyodbc.drivers()**
+   - SSMS bundles its own drivers and Python relies on system ODBC registry
+   - SQLAlchemy wraps pyodbc and Root cause is always lower-level ODBC
+   - This matters in production, since CI/CD servers often don’t have drivers
+
+# Load Fact Table into SQL
+Used Pandas "to_SQL" function to load cleaned data into SQL with "chunksize" method to prevent memory crashes and "replace" to ensure idempotency. 
+Here for performance perpective, the Chunked inserts = stable loads
+
+---
+
+## 4️⃣ Star Schema Design
+
+Followed a pragmatic **star-schema design** Country was modeled as a customer attribute because it had no independent hierarchies, and Date attributes were derived dynamically since the use case didn’t require a full calendar dimension.”
+
+                Dim_Customer (CustomerID, Country)
                      |
-Dim_Product —— Fact_Sales —— Dim_Date
-                     |
-                Dim_Country
+Dim_Product —— Fact_Sales 
+                     
 
-
-📦 Fact Table: fact_sales
+# 📦 Fact Table: fact_sales
 | Column       |
 | ------------ |
 | invoice_no   |
@@ -81,30 +115,39 @@ Dim_Product —— Fact_Sales —— Dim_Date
 | quantity     |
 | revenue      |
 
-👤 Dim Customer
+# 👤 Dim Customer
 | Column      |
 | ----------- |
 | customer_id |
 | country     |
 
-🛒 Dim Product
+# 🛒 Dim Product
 | Column      |
 | ----------- |
 | stock_code  |
 | description |
 
-## 4️⃣ Load Data into SQL (ETL → L)
+---
 
-# 🔧 Tools
-- SQL
-- SQLAlchemy
+## 5️⃣ Indexing
+Created Indexes (Clustered and Non Clustered) to speedup joins and filters and for RFM and Cohorts rely on date and customer
+This indexing will specifically reduce the query time from seconds to milliseconds
 
+| Index       | Enables             |
+| ----------- | ------------------- |
+| CustomerID  | RFM, churn analysis |
+| InvoiceDate | Cohorts, recency    |
+| Invoice     | Frequency accuracy  |
 
-# 🔌Python → SQL Connection
-
-## 5️⃣ SQL Schema Creation
+---
 
 ## 6️⃣ Single Customer View (CRITICAL)
+
+View creates a Logical abstraction with No data duplication
+
+🔥 Customer 360 View
+
+
 Marketing, churn models, Power BI — everything consumes this
 ⏱️ Find and Display the RFM in a SQL View
 ⏱️ Performance Check - 🎯 Target: < 2 seconds
@@ -112,11 +155,22 @@ Marketing, churn models, Power BI — everything consumes this
 ---
 
 # ✅ Week 1 Deliverables
-✔ Clean dataset
+✔ Clean Fact and Dim Tables
 ✔ Star schema
 ✔ ER diagram
-✔ Single Customer View
+✔ Indexed SQL model
+✔ Single Customer 360 View
 ✔ SQL optimized
+
+Week 1 TakeAway Points
+- Debugged and resolved ODBC driver-level connection failures between Python and SQL Server Express by validating driver availability, aligning SQLAlchemy connection strings, and enforcing encrypted Windows authentication.”
+
+| Operation | Speed         | Logged     | Keeps Structure|
+| --------- | ------------- | ---------  | ---------------|
+| DELETE    | ❌ Slow      | ✅ Yes     | ✅ Yes         |
+| TRUNCATE  | ⚡ Very Fast | ❌ Minimal | ✅ Yes         |
+| DROP      | ⚡ Instant   | ❌         | ❌ No          |
+
 
 ---
 
