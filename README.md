@@ -19,22 +19,20 @@ The system proactively identifies **churn-risk customers** and **high-value whal
 
 ---
 
-## 🔄 End-to-End Pipeline Flow
+## 🔄 End-to-End Pipeline Architecture
 
 ```
-Raw Kaggle CSV
-    ↓
-Data Cleaning & Modeling (Python)
-    ↓
-Star Schema in SQL (Fact + Dimensions)
-    ↓
-Single Customer View (SQL View)
-    ↓
-Advanced Analytics (Python: RFM, Cohorts, Market Basket)
-    ↓
-Power BI Dashboards (with RLS)
-    ↓
-Automation & Executive Output
+Raw CSV (Kaggle)
+      ↓
+Python ETL (Cleaning + Feature Engineering)
+      ↓
+SQL Server (Fact + Dimensions + Views)
+      ↓
+Python Analytics (RFM Engine)
+      ↓
+Analytical Tables (customer_360, cohort_table, mba_rules)
+      ↓
+Power BI Dashboards
 ```
 
 ---
@@ -43,10 +41,10 @@ Automation & Executive Output
 
 | Layer | Tool | Purpose |
 |--------|--------|------------|
-| Storage | SQL Server (SSMS 22) | Scalable analytics database |
-| ETL | Python (pandas, SQLAlchemy) | Robust data transformations |
-| Analytics | Python (NumPy, mlxtend) | RFM, Cohorts, Apriori |
-| Visualization | Power BI | Enterprise dashboards |
+| Storage | SQL Server (SSMS 22) | Scalable analytics warehouse |
+| ETL | Python (pandas, SQLAlchemy) | Robust transformations |
+| Analytics | Python (NumPy, mlxtend) | RFM modeling |
+| Visualization | Power BI | Executive dashboards |
 | Automation | Task Scheduler / Cron | Hands-free pipeline |
 
 ---
@@ -54,7 +52,7 @@ Automation & Executive Output
 # 🚀 WEEK 1 — Data Engineering & Schema Design
 
 ## 🎯 Goal
-Convert raw transactional logs into **clean, trusted, analytics-ready data** using an optimized star schema and build a **Single Customer View** capable of supporting sub-2-second queries.
+Convert raw transactional logs into **clean, trusted, analytics-ready data** using an optimized star schema and create a **Single Customer View** capable of supporting sub-2-second analytical queries.
 
 ---
 
@@ -63,7 +61,7 @@ Convert raw transactional logs into **clean, trusted, analytics-ready data** usi
 ### Key Issues Identified
 - Negative Quantity → Returns  
 - Negative Price → Data errors  
-- Missing Customer IDs (~243,007 rows)  
+- Missing Customer IDs (~243K rows)  
 - InvoiceDate stored as string  
 - Duplicate invoices  
 
@@ -72,11 +70,11 @@ Convert raw transactional logs into **clean, trusted, analytics-ready data** usi
 ## 🧹 Data Cleaning (Python – pandas)
 
 ### ✔ Handle Missing Customer IDs
-- Removed rows without Customer ID (required for RFM)
-- Converted float → int for performance
+- Removed rows without Customer ID (required for RFM)  
+- Converted float → int for performance  
 
 ### ✔ Handle Returns & Invalid Data
-- Filtered corrupt rows to enable faster aggregations
+Filtered corrupt rows to enable faster aggregations.
 
 ### ✔ Create Revenue
 Derived **Monetary (M in RFM)** to accelerate downstream SQL queries.
@@ -97,12 +95,7 @@ String → datetime conversion enables:
 - SQL Server  
 - SQLAlchemy  
 
-SQLAlchemy manages:
-
-- DB connections  
-- Transactions  
-- Data typing  
-- Bulk inserts  
+SQLAlchemy manages connections, transactions, data typing, and bulk inserts.
 
 **Production Insight:**  
 Python does NOT inherit SSMS drivers automatically — validating ODBC drivers is critical for CI/CD environments.
@@ -115,7 +108,7 @@ Used Pandas `to_sql()` with:
 - `chunksize` → Prevent memory crashes  
 - `replace` → Ensure idempotency  
 
-Chunked inserts resulted in **stable and scalable loads.**
+Chunked inserts resulted in stable and scalable loads.
 
 ---
 
@@ -172,7 +165,7 @@ Indexes reduce query time from **seconds → milliseconds.**
 | Index | Enables |
 |-----------|-------------|
 | CustomerID | RFM, churn analysis |
-| InvoiceDate | Cohorts, recency |
+| InvoiceDate | Recency calculations |
 | Invoice | Frequency accuracy |
 
 Without indexes → full table scans.
@@ -187,7 +180,7 @@ Without indexes → full table scans.
 - One row per customer  
 - Eliminates metric inconsistencies  
 
-✅ **Foundation for RFM & Churn**
+✅ **Foundation for RFM**
 - Frequency → purchase events  
 - Monetary → total revenue  
 - LastPurchaseDate → recency anchor  
@@ -208,7 +201,7 @@ Without indexes → full table scans.
 - Performance-ready indexes  
 - Customer 360 View ⭐  
 
-### Key Engineering Takeaway
+**Engineering Takeaway:**  
 Resolved ODBC driver-level failures between Python and SQL Server by validating drivers, aligning SQLAlchemy connection strings, and enforcing encrypted authentication.
 
 ---
@@ -245,12 +238,23 @@ Segments include:
 - At Risk  
 - Hibernating  
 
-Validated using revenue and recency distributions — **not assumptions.**
+Validated using revenue and recency distributions — not assumptions.
 
 ---
 
+## ✅ Week 2 Deliverables
+- Accurate Recency  
+- Reused Frequency & Monetary from SQL  
+- RFM scoring (1–5)  
+- Validated segments  
+- Statistical proof (Champions = highest LTV)
+
+---
+
+# 📊 WEEK 3 — Advanced Customer Insights & Visualization
+
 ## 📈 Cohort Analysis
-Monthly cohorts were used to track retention decay and long-term customer value.
+Customers were grouped by first purchase month to measure retention decay and long-term value.
 
 ✔ Defined acquisition cohorts  
 ✔ Built retention matrix  
@@ -292,18 +296,7 @@ Enabling scalable MBA.
 
 ---
 
-## ✅ Week 2 Deliverables
-- Accurate Recency  
-- Reused Frequency & Monetary from SQL  
-- RFM scoring (1–5)  
-- Validated segments  
-- Cohort analysis  
-- Market basket rules  
-- Statistical proof (Champions = highest LTV)
-
----
-
-# 📊 WEEK 3 — Power BI Storytelling
+## Power BI Dashboards
 
 🔐 Row-Level Security (RLS)
 
@@ -313,6 +306,14 @@ Dashboards designed to:
 - Surface churn risks & whales  
 - Enable regional self-service  
 - Deliver fast, trustworthy insights  
+
+---
+
+## ✅ Week 3 Deliverables
+- Cohort retention analysis  
+- Market basket rules  
+- Insight-ready analytical tables  
+- Executive dashboards  
 
 ---
 
