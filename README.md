@@ -240,6 +240,7 @@ Segments include:
 
 Validated using revenue and recency distributions — not assumptions.
 
+Implemented Market Basket Analysis by computing support, confidence, and lift metrics directly from a binary invoice–product matrix, equivalent to Apriori-based association rule mining.
 ---
 
 ## ✅ Week 2 Deliverables
