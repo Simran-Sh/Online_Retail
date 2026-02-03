@@ -131,7 +131,7 @@ Dim_Product —— Fact_Sales
 
 ## 5️⃣ Indexing
 Created Indexes (Clustered and Non Clustered) to speedup joins and filters and for RFM and Cohorts rely on date and customer
-This indexing will specifically reduce the query time from seconds to milliseconds
+This indexing will specifically reduce the query time from seconds to milliseconds. Without indexes, Full table scans will take place
 
 | Index       | Enables             |
 | ----------- | ------------------- |
@@ -142,25 +142,40 @@ This indexing will specifically reduce the query time from seconds to millisecon
 ---
 
 ## 6️⃣ Single Customer View (CRITICAL)
-
 View creates a Logical abstraction with No data duplication
 
-🔥 Customer 360 View
+## 🔥 Customer 360 View
+1️⃣ Single Source of Truth per Customer
+   - One row per customer
+   - Eliminates duplicate or conflicting customer metrics
+   - Ensures all teams use the same definitions for frequency, spend, and activity
 
+2️⃣ Foundation for RFM & Churn Analysis
+   - Frequency → number of unique purchase events
+   - Monetary → total revenue generated
+   - LastPurchaseDate → anchor for recency calculation
 
-Marketing, churn models, Power BI — everything consumes this
-⏱️ Find and Display the RFM in a SQL View
-⏱️ Performance Check - 🎯 Target: < 2 seconds
+👉 These raw metrics are stable, auditable, and reusable
+
+3️⃣ Performance-Optimized for Analytics & Dashboards
+   - Built on indexed fact tables
+   - Lightweight aggregations in SQL
+   - Fast enough for:
+      - Python analytics
+      - Power BI dashboards
+      - Automated pipelines
 
 ---
 
 # ✅ Week 1 Deliverables
-✔ Clean Fact and Dim Tables
+✔ Cleaned raw transactional data
+✔ Controlled ETL into SQL Server
 ✔ Star schema
 ✔ ER diagram
-✔ Indexed SQL model
-✔ Single Customer 360 View
-✔ SQL optimized
+✔ Proper fact table with correct grain
+✔ Proper dimension tables with enforced keys
+✔ Performance-ready indexes
+✔ Customer 360 View (single source of truth) ⭐
 
 Week 1 TakeAway Points
 - Debugged and resolved ODBC driver-level connection failures between Python and SQL Server Express by validating driver availability, aligning SQLAlchemy connection strings, and enforcing encrypted Windows authentication.”
@@ -171,10 +186,28 @@ Week 1 TakeAway Points
 | TRUNCATE  | ⚡ Very Fast | ❌ Minimal | ✅ Yes         |
 | DROP      | ⚡ Instant   | ❌         | ❌ No          |
 
+designed and implemented a production-ready star schema in SQL Server, enforced data integrity through constraints and window functions, and created a Customer 360 analytical view optimized for downstream RFM and churn analysis.
 
 ---
 
-# WEEK 2 — Analytical Core (Python Intelligence)
+# WEEK 2 — Analytical Core (Python Intelligence - RFM & SEGMENTATION)
+
+🎯 WEEK 2 BUSINESS GOAL
+Build an RFM segmentation engine in Python on top of a SQL-based Customer 360 view, using quantile-based scoring and validating segment quality through revenue and recency distributions. Identify Whales (highest value customers) and Churn Risks in a repeatable, automated way, directly from SQL Server.
+
+Input
+✅ dbo.vw_customer_360 (trusted, clean)
+
+Output
+✅ Customer-level RFM table
+✅ Segments: Champions, Loyalists, At Risk, Hibernating
+✅ Validated with statistics (not vibes)
+
+---
+
+## STEP 1: CONNECT PYTHON TO SQL SERVER (READ-ONLY)
+
+## STEP 2 — LOAD CUSTOMER 360 INTO PYTHON
 
 ## 1️⃣ RFM Calculation
 
@@ -185,20 +218,76 @@ Week 1 TakeAway Points
 | Frequency | Number of invoices       |
 | Monetary  | Total revenue            |
 
-## 2️⃣ RFM Scoring (1–5 Scale)\
+## 2️⃣ RFM Scoring (1–5 Scale)
 
 ## 3️⃣ Customer Segmentation (Business Mapping)
 
-## 4️⃣ Market Basket Analysis (Apriori)
+## COHORT ANALYSIS
+A cohort is a group of customers who made their first-ever purchase in the same time period (month or quarter).
+We’ve used monthly cohorts (industry standard)
+
+✔ Defined acquisition cohorts
+✔ Calculated month-by-month retention
+✔ Built cohort matrix (counts + %)
+✔ Created 3 high-impact charts:
+1️⃣ Retention Heatmap (most important)
+2️⃣ Retention decay curve (trend over time)
+3️⃣ Cohort Size Trend (context)
+✔ Ready for Power BI cohort heatmap
+
+I performed cohort-based retention analysis by grouping customers by first purchase month and tracking monthly activity decay, enabling long-term churn and LTV insights.
+
+## 4️⃣ Market Basket Analysis (MBA)
+MBA works at invoice (basket) level, not customer level.
+**🎯 Basket grain**
+1 row = 1 invoice
+1 column = 1 product
+
+---
+
+For MARKET BASKET ANALYSIS, We need:
+Invoice (basket)
+Product (Description)
+Quantity
+
+So we join fact_sales → dim_product because in a star schema, descriptive attributes like product names live in dimension tables. The fact table stores only keys and metrics for performance
+
+***basket_binary - applymap function***
+
+| Aspect     | Old (`applymap`)     | New (vectorized)      |
+| ---------- | -------------------- | --------------------- |
+| Speed      | ❌ Slow (Python loop) | ⚡ Very fast (C-level) |
+| Memory     | ❌ Inefficient        | ✅ Efficient           |
+| Pandas 2.x | ❌ Removed            | ✅ Supported           |
+| Production | ❌ Not ideal          | ✅ Best practice       |
+
+"Implemented Market Basket Analysis using a vectorized binary invoice–product matrix, ensuring compatibility with pandas 2.x and improving performance over deprecated applymap usage"
+
+## APRIORI
+This is good for small datasets, but for us it did Multiple full scans of data and hence failed
+Apriori has exponential memory complexity, so I constrained the item universe using frequency thresholds and limited itemset length, enabling scalable Market Basket Analysis.”
+
+---
+
 
 ## ✅ Week 2 Deliverables
+✔ Recency computed correctly
+✔ Frequency & Monetary reused from SQL
+✔ RFM scores (1–5)
 ✔ RFM engine
 ✔ Segments validated
+✔ COHORT ANALYSIS
 ✔ Market basket rules
 ✔ Statistical proof (Champions highest LTV)
 
 # WEEK 3 — Power BI Dashboard (Storytelling)
 🔐 Row Level Security (RLS)
+
+Goal is to build decision-ready dashboards that:
+   - Explain customer behavior
+   - Surface churn risks & whales
+   - Allow regional managers to self-serve
+   - Are fast, clean, and trustworthy
 
 # WEEK 4 — Automation & Executive Handoff
 
