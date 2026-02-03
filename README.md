@@ -264,9 +264,11 @@ So we join fact_sales → dim_product because in a star schema, descriptive attr
 "Implemented Market Basket Analysis using a vectorized binary invoice–product matrix, ensuring compatibility with pandas 2.x and improving performance over deprecated applymap usage"
 
 ## APRIORI
+
 This is good for small datasets, but for us it did Multiple full scans of data and hence failed
 Apriori has exponential memory complexity, so I constrained the item universe using frequency thresholds and limited itemset length, enabling scalable Market Basket Analysis.”
 
+Implemented Market Basket Analysis by computing support, confidence, and lift metrics directly from a binary invoice–product matrix, equivalent to Apriori-based association rule mining.
 ---
 
 
@@ -288,6 +290,57 @@ Goal is to build decision-ready dashboards that:
    - Surface churn risks & whales
    - Allow regional managers to self-serve
    - Are fast, clean, and trustworthy
+
+**Data Model & Import (Power BI)**
+✔ Star schema
+✔ Relationships
+✔ Measures (DAX basics)
+
+**Core Business Dashboards**
+✔ Sales trends
+✔ Geography
+✔ Top products
+✔ RFM segmentation
+
+**Advanced Analytics Visuals**
+✔ Cohort matrix
+✔ Churn signals
+✔ Key Influencers
+
+**Security + UX Audit**
+✔ Row-Level Security (RLS)
+✔ Storytelling polish
+✔ Executive narrative
+
+load into Power BI from SQL / Python outputs:
+| Table        | Purpose                   |
+| ------------ | ------------------------- |
+| Fact_Sales   | Revenue, quantity, trends |
+| Dim_Customer | Customer attributes       |
+| Dim_Product  | Product hierarchy         |
+| Dim_Date     | Time intelligence         |
+| Customer_360 | RFM + churn signals       |
+| Cohort_Table | Retention analysis        |
+| MBA_Rules    | Product bundles           |
+
+👉 Rule:
+Power BI is not for heavy computation — SQL & Python already did that.
+
+# DATA MODEL (STAR SCHEMA Relationships)
+| From                  | To                      | Type       |
+| --------------------- | ----------------------- | ---------- |
+| fact_sales.CustomerID | dim_customer.CustomerID | Many → One |
+| fact_sales.ProductID  | dim_product.ProductID   | Many → One |
+
+📌 Single-direction filters only
+📌 Avoid bi-directional unless required
+
+| Layer               | Example                                          |
+| ------------------- | ------------------------------------------------ |
+| Transactional data  | `fact_sales`                                     |
+| Dimensional context | `dim_product`, `dim_customer`                    |
+| Analytical outputs  | `customer_360_view`, `cohort_table`, `mba_rules` |
+
 
 # WEEK 4 — Automation & Executive Handoff
 
