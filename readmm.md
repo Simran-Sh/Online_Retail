@@ -144,6 +144,8 @@ Loaded cleaned dataset into:
 ```sql
 dbo.fact_sales_raw
 
+---
+
 ## 🔹 Step 3: Star Schema Design
 Fact Table
 fact_sales
@@ -162,6 +164,7 @@ Star Schema for
 Faster aggregations
 Clean separation of facts vs attributes
 Power BI friendly
+
 ---
 
 ## 🟢 Week 2 — Analytical Core (Python)
