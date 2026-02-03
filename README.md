@@ -300,4 +300,4 @@ Goal is to build decision-ready dashboards that:
 ✔ Raw CSV → SQL
 ✔ SQL → Python
 ✔ Python → Power BI
-✔ Auto refresh works
+✔ Auto refresh works 
