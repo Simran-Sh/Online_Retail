@@ -13,9 +13,10 @@ Build a fully automated, production-grade customer intelligence pipeline using *
 
 - RFM segmentation  
 - Cohort retention analysis  
-- Market basket modeling  
+- Market basket modeling
+      - using  Association Rule Mining (Apriori/FP-Growth algorithms)
 
-The system proactively identifies **churn-risk customers** and **high-value whales**, enabling faster and more informed business decisions.
+The system to proactively identify **churn-risk customers** and **high-value whales**, enabling faster and more informed business decisions.
 
 ---
 
@@ -185,6 +186,15 @@ Without indexes → full table scans.
 - Monetary → total revenue  
 - LastPurchaseDate → recency anchor  
 
+## 🧠 RFM Calculation
+
+| Metric     | Meaning                  |
+|------------|--------------------------|
+| Recency    | Days since last purchase |
+| Frequency  | Number of invoices       |
+| Monetary   | Total revenue            |
+
+
 ✅ **Optimized for Analytics**
 - Built on indexed fact tables  
 - Lightweight SQL aggregations  
@@ -197,9 +207,11 @@ Without indexes → full table scans.
 - Cleaned transactional dataset  
 - Controlled ETL into SQL Server  
 - Star schema + ER diagram  
-- Proper fact & dimension tables  
+- fact & dimension tables
+- Sanity check for all tables
+- Issues fixed for failed integrity in data
 - Performance-ready indexes  
-- Customer 360 View ⭐  
+- Customer 360 View with RFM ⭐  
 
 **Engineering Takeaway:**  
 Resolved ODBC driver-level failures between Python and SQL Server by validating drivers, aligning SQLAlchemy connection strings, and enforcing encrypted authentication.
@@ -217,16 +229,6 @@ Build an automated **RFM segmentation engine** on top of the SQL-based Customer 
 
 **Input:** `dbo.vw_customer_360`  
 **Output:** Customer-level RFM table with validated segments.
-
----
-
-## 🧠 RFM Calculation
-
-| Metric | Meaning |
-|------------|-------------------------|
-| Recency | Days since last purchase |
-| Frequency | Number of invoices |
-| Monetary | Total revenue |
 
 ---
 
@@ -257,12 +259,10 @@ Implemented Market Basket Analysis by computing support, confidence, and lift me
 ## 📈 Cohort Analysis
 Customers were grouped by first purchase month to measure retention decay and long-term value.
 
-✔ Defined acquisition cohorts  
-✔ Built retention matrix  
-✔ Generated high-impact visuals:
-- Retention Heatmap  
-- Retention Decay Curve  
-- Cohort Size Trend  
+- Defined **CohortMonth** as first purchase month
+- Calculated **CohortIndex** (months since acquisition)
+- Computed **RetentionRate**
+- Built cohort retention table for visualization
 
 Ready for Power BI integration.
 
@@ -288,25 +288,55 @@ because descriptive attributes belong in dimension tables.
 ---
 
 ## Apriori Optimization
-Apriori’s exponential memory usage was controlled by:
+## Generated association rules:
+  - Support
+  - Confidence
+  - Lift
+- Persisted results as `mba_rules` table
 
-- Frequency thresholds  
-- Itemset limits  
-
-Enabling scalable MBA.
+### Challenges & Solutions
+- **MemoryError in Apriori**
+  → Reduced product space + limited itemset length  
+- **Duplicate product descriptions**
+  → Interpreted high-lift rules as data quality insight
 
 ---
 
-## Power BI Dashboards
+## Power BI Dashboard & Storytelling
+- Translate analytics into **business insights**
+- Build **executive-ready dashboards**
+- 🔐 Row-Level Security (RLS)
 
-🔐 Row-Level Security (RLS)
-
-Dashboards designed to:
-
+**Dashboards designed to:**
 - Explain customer behavior  
 - Surface churn risks & whales  
 - Enable regional self-service  
 - Deliver fast, trustworthy insights  
+
+---
+
+## 📊 Dashboards to Build
+#### 1️⃣ Executive Overview
+- KPIs: Revenue, Orders, Customers, AOV
+- Revenue trends over time
+- Geographic revenue contribution
+
+#### 2️⃣ Customer 360 / Churn View
+- RFM segment distribution
+- High-value customers (Whales)
+- Churn-risk customer list
+
+#### 3️⃣ Cohort Retention Analysis
+- Heatmap matrix:
+  - Rows: CohortMonth
+  - Columns: CohortIndex
+  - Values: RetentionRate
+- KPI cards for early churn detection
+
+#### 4️⃣ Market Basket Insights
+- Product-to-product association table
+- Lift & confidence filters
+- Cross-sell recommendation slicers
 
 ---
 
@@ -320,9 +350,13 @@ Dashboards designed to:
 
 # ⚙️ WEEK 4 — Automation & Executive Handoff
 
-### ✔ Automate ETL  
-### ✔ Build Presentation Deck  
-### ✔ Execute Full Pipeline Test  
+### Automation
+- Consolidated Python logic into `rfm_pipeline.py`
+- **Implemented:**
+  - Modular ETL functions
+  - Logging & error handling
+- Scheduled execution using **Windows Task Scheduler**
+- Power BI refresh aligned with ETL completion 
 
 Pipeline validation:
 
@@ -332,3 +366,39 @@ Pipeline validation:
 - Auto refresh enabled  
 
 ---
+
+# PROJECT DELIVERABLES
+- SQL Star Schema & Views
+- Python analytics pipeline
+- Automated ETL execution
+- Power BI dashboards
+- Executive-ready insights
+- Full project documentation
+
+---
+
+## 🎯 Business Impact
+
+- Enables **targeted retention strategies**
+- Identifies **high-value customers**
+- Improves **cross-sell and bundling decisions**
+- Highlights **acquisition quality via cohorts**
+- Reduces manual reporting effort - if the CSV can be some real data
+
+---
+
+## 🧠 Key Learnings
+
+- Importance of dimensional modeling
+- Handling real-world data quality issues
+- Scaling analytical algorithms
+- Bridging analytics with business storytelling
+- Building production-ready data pipelines
+
+---
+
+## 👤 Author
+
+Simran | Kartik | Deep  - TeamWork
+Data Analytics | SQL | Python | Power BI |
+End-to-End Analytics & Business Intelligence
