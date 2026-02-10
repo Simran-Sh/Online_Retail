@@ -415,6 +415,6 @@ Pipeline validation:
 
 ## 👤 Author
 
-Simran | Kartik | Deep  - TeamWork
+Simran | Kartik | Dhritideep  - TeamWork
 Data Analytics | SQL | Python | Power BI |
 End-to-End Analytics & Business Intelligence
