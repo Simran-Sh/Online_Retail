@@ -1,0 +1,30 @@
+table dim_product
+	lineageTag: 0d47655a-ae79-4ad1-81aa-9008a4504980
+
+	column StockCode
+		dataType: string
+		lineageTag: f5198dcc-50c9-44f5-ba5f-e1d1581eac21
+		summarizeBy: none
+		sourceColumn: StockCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: cb07f4cc-9fe2-43a3-9aa5-5581a87669fd
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_dim_product = Source{[Schema="dbo",Item="dim_product"]}[Data]
+				in
+				    dbo_dim_product
+
+	annotation PBI_ResultType = Table
+

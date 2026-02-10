@@ -1,0 +1,65 @@
+table cohort_table
+	lineageTag: 85810c91-94b8-4cca-aa79-4bc306417f46
+
+	column CohortMonth
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1ce3449b-eb8f-433b-bb0d-dcdef4353f17
+		summarizeBy: none
+		sourceColumn: CohortMonth
+
+		variation Variation
+			isDefault
+			relationship: 1c423e16-bed8-45a5-85a5-4355bbdfacdc
+			defaultHierarchy: LocalDateTable_6e695aa9-5407-4af6-bd2a-d73c60911661.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column CohortIndex
+		dataType: int64
+		formatString: 0
+		lineageTag: 7da23f22-057f-4c26-b571-cea5190a3e7c
+		summarizeBy: sum
+		sourceColumn: CohortIndex
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActiveCustomers
+		dataType: int64
+		formatString: 0
+		lineageTag: d320570e-718b-4225-b7af-db6997aa9792
+		summarizeBy: sum
+		sourceColumn: ActiveCustomers
+
+		annotation SummarizationSetBy = Automatic
+
+	column CohortSize
+		dataType: int64
+		formatString: 0
+		lineageTag: daa8ff36-a9cf-410d-b146-2f921b45eee2
+		summarizeBy: sum
+		sourceColumn: CohortSize
+
+		annotation SummarizationSetBy = Automatic
+
+	column RetentionRate
+		dataType: double
+		lineageTag: 8069d0dd-a971-44f8-9813-f9020da4d2ef
+		summarizeBy: sum
+		sourceColumn: RetentionRate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition cohort_table = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_cohort_table = Source{[Schema="dbo",Item="cohort_table"]}[Data]
+				in
+				    dbo_cohort_table
+
+	annotation PBI_ResultType = Table
+

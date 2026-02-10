@@ -50,6 +50,22 @@ Power BI Dashboards
 
 ---
 
+Retail-Customer-Analytics/
+├── sql/
+│   ├── schema.sql            # Fact & dimension table creation
+│   ├── views.sql             # Customer 360 & analytics views
+│
+├── python/
+│   ├── etl_pipeline.py       # ETL & data cleaning
+│   ├── rfm_analysis.py       # RFM segmentation
+│   ├── cohort_analysis.py    # Cohort retention logic
+│   └── mba_analysis.py       # Market Basket Analysis
+│
+├── powerbi/
+│   └── dashboards.pbix
+
+---
+
 # 🚀 WEEK 1 — Data Engineering & Schema Design
 
 ## 🎯 Goal
@@ -241,8 +257,8 @@ Segments include:
 - Hibernating  
 
 Validated using revenue and recency distributions — not assumptions.
+Implemented Market Basket Analysis by computing support, confidence, and lift metrics directly from a binary invoice–product matrix, equivalent to Apriori-based association rule mining
 
-Implemented Market Basket Analysis by computing support, confidence, and lift metrics directly from a binary invoice–product matrix, equivalent to Apriori-based association rule mining.
 ---
 
 ## ✅ Week 2 Deliverables

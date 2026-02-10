@@ -1,0 +1,99 @@
+table _measures
+	lineageTag: 4f146e0e-9521-4d8b-a9f6-9c2850cd81e9
+
+	measure TotalRevenue = ```
+			
+			    SUM(fact_sales[Revenue])
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 7d5da02c-cca6-4dd5-aac6-94e56a2a370c
+
+	measure TotalOrders = ```
+			
+			    DISTINCTCOUNT(fact_sales[Invoice])
+			
+			```
+		formatString: 0
+		lineageTag: 221eb1ff-b0c0-47c1-bbc9-485440ca3925
+
+	measure TotalCustomers = ```
+			
+			DISTINCTCOUNT ( dim_customer[CustomerID] )
+			
+			```
+		formatString: 0
+		lineageTag: 840ae34a-c2ff-47fe-bf6f-862e966d7cb7
+
+	measure AvgOrderValue = ```
+			
+			    DIVIDE([TotalRevenue],[TotalOrders])
+			
+			```
+		formatString: 0
+		lineageTag: 0240cccf-4a4d-41c2-b71f-da88e4cb75f8
+
+	measure TotalMBA_Rules = ```
+			
+			    COUNTROWS(mba_rules)
+			```
+		formatString: 0
+		lineageTag: 999a39fc-50df-4fd1-b80e-04e48f5fbf52
+
+	measure AvgLift = ```
+			
+			    AVERAGE(mba_rules[lift])
+			```
+		lineageTag: 012494c2-5723-4712-9bfb-cbbc73761fd9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AvgConfidence = ```
+			
+			    Average(mba_rules[confidence])
+			```
+		lineageTag: 0052366a-87a9-492b-a50a-27d62149fcc9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AvgMonth1_Retention = ```
+			
+			    CALCULATE(
+			        AVERAGE(cohort_table[RetentionRate]), 
+			        cohort_table[CohortIndex]=1
+			    )
+			```
+		lineageTag: 5018b312-0e42-42b3-a4e3-b5a5a950813a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AvgMonth3_Retention = ```
+			
+			    CALCULATE(
+			    AVERAGE(cohort_table[RetentionRate]),
+			    cohort_table[CohortIndex] = 3
+			)
+			
+			```
+		lineageTag: ad1d83b5-7c83-4214-b651-50e6cbf04946
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column1
+		dataType: string
+		lineageTag: 0f7cec09-49ec-4830-8a16-f600cae0e095
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

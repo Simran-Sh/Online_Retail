@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Week3"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "59325fba-47f7-4de0-91c5-a2da55879997"
+  }
+}

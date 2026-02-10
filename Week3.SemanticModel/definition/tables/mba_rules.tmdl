@@ -1,0 +1,57 @@
+table mba_rules
+	lineageTag: a4a82b36-b9d1-427d-836a-018786934719
+
+	column antecedents
+		dataType: string
+		lineageTag: c0043844-7f21-48c7-ae10-392f0ad64854
+		summarizeBy: none
+		sourceColumn: antecedents
+
+		annotation SummarizationSetBy = Automatic
+
+	column consequents
+		dataType: string
+		lineageTag: bce93cdc-4972-4998-979b-821dba9d7640
+		summarizeBy: none
+		sourceColumn: consequents
+
+		annotation SummarizationSetBy = Automatic
+
+	column support
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 59eba76e-f801-4b5d-b4be-2d99419a2144
+		summarizeBy: sum
+		sourceColumn: support
+
+		annotation SummarizationSetBy = Automatic
+
+	column confidence
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 25445495-fd1c-42cd-b980-41c1bf69d206
+		summarizeBy: sum
+		sourceColumn: confidence
+
+		annotation SummarizationSetBy = Automatic
+
+	column lift
+		dataType: double
+		formatString: 0.00
+		lineageTag: 564f1164-9211-4d20-800d-d36f9a7a9f4a
+		summarizeBy: sum
+		sourceColumn: lift
+
+		annotation SummarizationSetBy = Automatic
+
+	partition mba_rules = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_mba_rules = Source{[Schema="dbo",Item="mba_rules"]}[Data]
+				in
+				    dbo_mba_rules
+
+	annotation PBI_ResultType = Table
+

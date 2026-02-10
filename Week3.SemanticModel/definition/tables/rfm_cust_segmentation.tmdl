@@ -1,0 +1,74 @@
+table rfm_cust_segmentation
+	lineageTag: 8ab8a4ab-cceb-4354-a36d-b90c62f9722c
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: fb17b646-8a52-48d3-b7f6-44e93b5fa7c5
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: e1236dd2-b72c-4e96-94f3-ec0b469f528c
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recency
+		dataType: int64
+		formatString: 0
+		lineageTag: 84f92a0a-0786-4b03-b67e-0fb78af52e39
+		summarizeBy: sum
+		sourceColumn: Recency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Frequency
+		dataType: int64
+		formatString: 0
+		lineageTag: e28bc2aa-4708-4748-bc3c-ea4bdfe0dbfb
+		summarizeBy: sum
+		sourceColumn: Frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Monetary
+		dataType: double
+		lineageTag: 49fa5361-134a-4f01-8a48-dff8ef4792a9
+		summarizeBy: sum
+		sourceColumn: Monetary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RFM_Score
+		dataType: int64
+		formatString: 0
+		lineageTag: da9cc67f-c21f-4c89-bb24-40e68e89e02e
+		summarizeBy: sum
+		sourceColumn: RFM_Score
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segment
+		dataType: string
+		lineageTag: 569fbf8a-d8a4-4fcf-9852-8aa21498fa34
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition rfm_cust_segmentation = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_rfm_cust_segmentation = Source{[Schema="dbo",Item="rfm_cust_segmentation"]}[Data]
+				in
+				    dbo_rfm_cust_segmentation
+

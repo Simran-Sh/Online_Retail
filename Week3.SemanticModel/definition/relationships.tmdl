@@ -1,0 +1,42 @@
+relationship 78f6bfcd-913e-43cb-8c0c-5d14cd500378
+	joinOnDateBehavior: datePartOnly
+	fromColumn: vw_customer_360.LastPurchaseDate
+	toColumn: LocalDateTable_17c0ff18-741e-45b1-891e-5f743ed924da.Date
+
+relationship f5d9b34e-d369-4598-86eb-4f9ff84c068b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_sales.InvoiceDate
+	toColumn: LocalDateTable_64532cff-c386-4008-bbbf-ea52f951e628.Date
+
+relationship AutoDetected_e1c3ca44-9886-4622-9dd4-cfb9fa2fd7c9
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dim_customer.CustomerID
+	toColumn: vw_customer_360.CustomerID
+
+relationship AutoDetected_295e3f77-7cb9-41bd-99a1-e3248e0910e6
+	fromColumn: fact_sales.CustomerID
+	toColumn: vw_customer_360.CustomerID
+
+relationship 09b97275-7492-6f3a-2a73-a8c766d502ab
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: dim_product.StockCode
+	toColumn: fact_sales.StockCode
+
+relationship afd0ba71-b39d-81de-9548-2394120f29b1
+	isActive: false
+	fromColumn: fact_sales.CustomerID
+	toColumn: dim_customer.CustomerID
+
+relationship 1c423e16-bed8-45a5-85a5-4355bbdfacdc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: cohort_table.CohortMonth
+	toColumn: LocalDateTable_6e695aa9-5407-4af6-bd2a-d73c60911661.Date
+
+relationship AutoDetected_d190ddb1-fa42-482d-a297-9947b1729223
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: rfm_cust_segmentation.CustomerID
+	toColumn: vw_customer_360.CustomerID
+

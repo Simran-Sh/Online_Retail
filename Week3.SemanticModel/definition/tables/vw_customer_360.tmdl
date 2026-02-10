@@ -1,0 +1,63 @@
+table vw_customer_360
+	lineageTag: b7052625-d8f2-4f96-b318-a2b2fe632476
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: 991bd7b1-f93a-40a7-8ebc-bcdd4d65f33b
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 421e8cb0-3057-4bcc-89ec-db8d8979a91e
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Frequency
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d719dcf-0b80-491a-a758-2b9b945f0f37
+		summarizeBy: sum
+		sourceColumn: Frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Monetary
+		dataType: double
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 078f39c2-115e-4fe6-bb49-4287ad890b63
+		summarizeBy: sum
+		sourceColumn: Monetary
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastPurchaseDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7a7940e9-b4f9-4244-9164-002cf9f0b0d5
+		summarizeBy: none
+		sourceColumn: LastPurchaseDate
+
+		variation Variation
+			isDefault
+			relationship: 78f6bfcd-913e-43cb-8c0c-5d14cd500378
+			defaultHierarchy: LocalDateTable_17c0ff18-741e-45b1-891e-5f743ed924da.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vw_customer_360 = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_vw_customer_360 = Source{[Schema="dbo",Item="vw_customer_360"]}[Data]
+				in
+				    dbo_vw_customer_360
+
+	annotation PBI_ResultType = Table
+

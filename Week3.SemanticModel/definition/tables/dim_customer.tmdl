@@ -1,0 +1,31 @@
+table dim_customer
+	lineageTag: 4aa66a01-c3e9-47f2-8417-244ed723976b
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f49c935-31c9-4ed6-932c-b88b36825087
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 4d8ff811-289a-4a8f-b33a-e915b979e140
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_dim_customer = Source{[Schema="dbo",Item="dim_customer"]}[Data]
+				in
+				    dbo_dim_customer
+
+	annotation PBI_ResultType = Table
+

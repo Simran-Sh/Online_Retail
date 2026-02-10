@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 1.3333333730697632
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 429,
+            "y": 0
+          },
+          "nodeIndex": "dim_customer",
+          "nodeLineageTag": "4aa66a01-c3e9-47f2-8417-244ed723976b",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 738.38305001469348,
+            "y": 237.375
+          },
+          "nodeIndex": "dim_product",
+          "nodeLineageTag": "0d47655a-ae79-4ad1-81aa-9008a4504980",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 355,
+            "y": 219
+          },
+          "nodeIndex": "fact_sales",
+          "nodeLineageTag": "f9d262cf-1b4a-4cbe-8982-1cfb7ebd8e2d",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 282.375
+          },
+          "nodeIndex": "vw_customer_360",
+          "nodeLineageTag": "b7052625-d8f2-4f96-b318-a2b2fe632476",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1002.3830500146935,
+            "y": 316.375
+          },
+          "nodeIndex": "mba_rules",
+          "nodeLineageTag": "a4a82b36-b9d1-427d-836a-018786934719",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 997.38305001469348,
+            "y": 0
+          },
+          "nodeIndex": "_measures",
+          "nodeLineageTag": "4f146e0e-9521-4d8b-a9f6-9c2850cd81e9",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 998.99999999999977,
+            "y": 111.625
+          },
+          "nodeIndex": "cohort_table",
+          "nodeLineageTag": "85810c91-94b8-4cca-aa79-4bc306417f46",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 376.61694998530606,
+            "y": 476.875
+          },
+          "nodeIndex": "rfm_cust_segmentation",
+          "nodeLineageTag": "8ab8a4ab-cceb-4354-a36d-b90c62f9722c",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 1
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

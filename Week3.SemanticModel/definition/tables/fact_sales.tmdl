@@ -1,0 +1,73 @@
+table fact_sales
+	lineageTag: f9d262cf-1b4a-4cbe-8982-1cfb7ebd8e2d
+
+	column Invoice
+		dataType: string
+		lineageTag: a8302e5d-d184-43b5-a658-a9cc27b20aa7
+		summarizeBy: none
+		sourceColumn: Invoice
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1237635b-65a9-494e-ad2e-e00a3ea3e8d4
+		summarizeBy: none
+		sourceColumn: InvoiceDate
+
+		variation Variation
+			isDefault
+			relationship: f5d9b34e-d369-4598-86eb-4f9ff84c068b
+			defaultHierarchy: LocalDateTable_64532cff-c386-4008-bbbf-ea52f951e628.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: ceb99c61-a3a0-4b54-8c3a-92cf435bcb34
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockCode
+		dataType: string
+		lineageTag: 1796a364-24f5-498b-8ce5-d877cffc3418
+		summarizeBy: none
+		sourceColumn: StockCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 467b1ca6-f327-4b40-b118-bdcad1ccfcf8
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column Revenue
+		dataType: double
+		formatString: \$#,0.0;(\$#,0.0);\$#,0.0
+		lineageTag: 4aa64a90-88f0-4311-9a78-d08469737724
+		summarizeBy: sum
+		sourceColumn: Revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ANIRUDH\SQLEXPRESS", "OnlineRetail"),
+				    dbo_fact_sales = Source{[Schema="dbo",Item="fact_sales"]}[Data]
+				in
+				    dbo_fact_sales
+
+	annotation PBI_ResultType = Table
+
